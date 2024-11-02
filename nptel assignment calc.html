@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NPtel Assignment Score Calculator</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+    :root {
+      --primary-color: #4a90e2;
+      --secondary-color: #f39c12;
+      --background-color: #1a1a2e;
+      --text-color: #ffffff;
+      --input-bg: rgba(255, 255, 255, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary-color);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: var(--secondary-color);
+      font-size: 18px;
+    }
+
+    select {
+      font-size: 18px;
+      padding: 10px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      background-color: var(--input-bg);
+      color: var(--text-color);
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--primary-color);
+      transform: scale(1.05);
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background-color: var(--primary-color);
+      color: var(--text-color);
+      border: none;
+      border-radius: 5px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    button:hover {
+      background-color: #3a7bd5;
+      transform: translateY(-2px);
+    }
+
+    #result {
+      margin-top: 30px;
+      font-size: 24px;
+      font-weight: 700;
+      text-align: center;
+      color: var(--secondary-color);
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-20px);
+      }
+
+      100% {
+        transform: translateY(0px);
+      }
+    }
+  </style>
+
+  <body>
+    <div class="container">
+      <h1>NPtel Assignment Score Calculator</h1>
+      <form>
+        <div class="input-group">
+          <label for="courseDuration">Course Duration:</label>
+          <select id="courseDuration">
+            <option value="4">4 Weeks</option>
+            <option value="8">8 Weeks</option>
+            <option value="12">12 Weeks</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="assignmentScores">Assignment Scores (comma-separated):</label>
+          <input type="text" id="assignmentScores" placeholder="e.g., 90,85,78,92">
+        </div>
+        <button type="button" onclick="calculateScore()">Calculate Score</button>
+      </form>
+      <p id="result"></p>
+    </div>
+
+    <script>
+      function calculateScore() {
+        const courseDuration = parseInt(document.getElementById("courseDuration").value);
+        const assignmentScores = document.getElementById("assignmentScores").value.split(",");
+
+        // Sort the scores in descending order
+        const sortedScores = assignmentScores.sort((a, b) => b - a);
+
+        // Select the best scores based on course duration
+        let bestScores;
+        switch (courseDuration) {
+          case 4:
+            bestScores = sortedScores.slice(0, 3);
+            break;
+          case 8:
+            bestScores = sortedScores.slice(0, 6);
+            break;
+          case 12:
+            bestScores = sortedScores.slice(0, 8);
+            break;
+          default:
+            alert("Invalid course duration.");
+            return;
+        }
+
+        // Calculate the total score and average score
+        const totalScore = bestScores.reduce((acc, score) => acc + parseInt(score), 0);
+        const averageScore = totalScore / bestScores.length;
+
+        // Calculate the score out of 25 (assuming maximum total score is 100)
+        const scoreOut25 = (averageScore / 100) * 25;
+
+        // Display the result
+        document.getElementById("result").textContent = `Your final score is: ${averageScore.toFixed(2)} / 100 or ${scoreOut25.toFixed(2)} / 25`;
+      }
+    </script>
+  </body>
+
+</html>
