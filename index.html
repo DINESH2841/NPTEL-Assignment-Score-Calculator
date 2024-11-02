@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NPtel Assignment Score Calculator</title>
+  <title>NPTEL Assignment Score Calculator</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
@@ -131,64 +131,75 @@
       }
     }
   </style>
+</head>
 
-  <body>
-    <div class="container">
-      <h1>NPtel Assignment Score Calculator</h1>
-      <form>
-        <div class="input-group">
-          <label for="courseDuration">Course Duration:</label>
-          <select id="courseDuration">
-            <option value="4">4 Weeks</option>
-            <option value="8">8 Weeks</option>
-            <option value="12">12 Weeks</option>
-          </select>
-        </div>
-        <div class="input-group">
-          <label for="assignmentScores">Assignment Scores (comma-separated):</label>
-          <input type="text" id="assignmentScores" placeholder="e.g., 90,85,78,92">
-        </div>
-        <button type="button" onclick="calculateScore()">Calculate Score</button>
-      </form>
-      <p id="result"></p>
-    </div>
+<body>
+  <div class="container">
+    <h1>NPTEL Assignment Score Calculator</h1>
+    <form>
+      <div class="input-group">
+        <label for="courseDuration">Course Duration:</label>
+        <select id="courseDuration">
+          <option value="4">4 Weeks</option>
+          <option value="8">8 Weeks</option>
+          <option value="12">12 Weeks</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="assignmentScores">Assignment Scores (comma-separated):</label>
+        <input type="text" id="assignmentScores" placeholder="e.g., 90,85,78,92">
+      </div>
+      <button type="button" onclick="calculateScore()">Calculate Score</button>
+    </form>
+    <p id="result"></p>
+  </div>
 
-    <script>
-      function calculateScore() {
-        const courseDuration = parseInt(document.getElementById("courseDuration").value);
-        const assignmentScores = document.getElementById("assignmentScores").value.split(",");
+  <script>
+    function calculateScore() {
+      const courseDuration = parseInt(document.getElementById("courseDuration").value);
+      const assignmentScores = document.getElementById("assignmentScores").value.split(",").map(score => parseInt(score.trim()));
 
-        // Sort the scores in descending order
-        const sortedScores = assignmentScores.sort((a, b) => b - a);
-
-        // Select the best scores based on course duration
-        let bestScores;
-        switch (courseDuration) {
-          case 4:
-            bestScores = sortedScores.slice(0, 3);
-            break;
-          case 8:
-            bestScores = sortedScores.slice(0, 6);
-            break;
-          case 12:
-            bestScores = sortedScores.slice(0, 8);
-            break;
-          default:
-            alert("Invalid course duration.");
-            return;
-        }
-
-        // Calculate the total score and average score
-        const totalScore = bestScores.reduce((acc, score) => acc + parseInt(score), 0);
-        const averageScore = totalScore / bestScores.length;
-
-        // Calculate the score out of 25 (assuming maximum total score is 100)
-        const scoreOut25 = (averageScore / 100) * 25;
-
-        // Display the result
-        document.getElementById("result").textContent = `Your final score is: ${averageScore.toFixed(2)} / 100 or ${scoreOut25.toFixed(2)} / 25`;
+      // Check for valid scores
+      if (assignmentScores.some(isNaN)) {
+        alert("Please enter valid numeric scores separated by commas.");
+        return;
       }
-    </script>
-  </body>
+
+      // Sort the scores in descending order
+      const sortedScores = assignmentScores.sort((a, b) => b - a);
+
+      // Select the best scores based on course duration
+      let bestScores;
+      switch (courseDuration) {
+        case 4:
+          bestScores = sortedScores.slice(0, 3);
+          break;
+        case 8:
+          bestScores = sortedScores.slice(0, 6);
+          break;
+        case 12:
+          bestScores = sortedScores.slice(0, 8);
+          break;
+        default:
+          alert("Invalid course duration.");
+          return;
+      }
+
+      // Calculate the total score and average score
+      const totalScore = bestScores.reduce((acc, score) => acc + score, 0);
+      const averageScore = totalScore / bestScores.length;
+
+      // Calculate the score out of 25 (assuming maximum total score is 100)
+      const scoreOut25 = (averageScore / 100) * 25;
+
+      // Display the result with the condition for certificate eligibility
+      if (scoreOut25 < 10) {
+        document.getElementById("result").textContent = `Your final score is: ${averageScore.toFixed(2)} / 100 or ${scoreOut25.toFixed(2)} / 25. Unfortunately, you cannot get a certificate as the minimum required score is 10/25.`;
+      } else {
+        document.getElementById("result").textContent = `Your final score is: ${averageScore.toFixed(2)} / 100 or ${scoreOut25.toFixed(2)} / 25.`;
+      }
+    }
+  </script>
+</body>
 
 </html>
